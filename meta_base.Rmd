@@ -1,11 +1,10 @@
 ---
-title: "Construindo a meta-base"
-output: html_notebook
-knit: (function(input_file, encoding) {
-  out_dir <- 'docs';
-  rmarkdown::render(input_file,
- encoding=encoding,
- output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
+title: "Criando a meta-base e avaliando"
+output:
+  html_document:
+    df_print: paged
+knit: (function(input_file, encoding) { out_dir <- 'docs'; rmarkdown::render(input_file,
+  encoding=encoding, output_file=file.path(dirname(input_file), out_dir, 'meta_base.html'))})
 ---
 
 
@@ -35,18 +34,11 @@ source("kfold.R")
 source("classificadores.R")
 ```
 
-Configurando o caminho base:
-
-```{r}
-path = "~/Desktop/mtl/dataset/"
-setwd(path)
-```
-
 Extraindo as medidas de caracterização tradicionais e rodando diversos classificadorespara varias bases de dados:
 
 ```{r}
 set.seed(1)
-files = sample(list.files(path, full.names=TRUE), 10)
+files = sample(list.files(pattern=".arff", full.names=TRUE), 30)
 
 aux = lapply(files, function(file) {
   print(file)
@@ -57,7 +49,12 @@ aux = lapply(files, function(file) {
   c(medidas, class=alg)
 })
 
-aux = data.frame(do.call("rbind", aux))
+aux = do.call("rbind", aux)
+
+# remove NAs
+aux[!is.finite(aux)] = 0
+
+aux = data.frame(aux)
 aux$class = as.factor(aux$class)
 head(aux)
 ```
@@ -65,10 +62,14 @@ head(aux)
 Desempenho em predizer o melhor algoritmo:
 
 ```{r}
+set.seed(1)
 data = kfold(aux)
-acuracia = mapply(function(tran, test) {
-classificadores(tran, test)
+acc = mapply(function(tran, test) {
+classificadores(tran, test, cl=c("RF", "SVM"))
 }, tran=data$tran, test=data$test)
 
-print(acuracia)
+print(acc)
+print(rowMeans(acc))
+boxplot(t(acc))
+print(summary(aux$class)/30)
 ```

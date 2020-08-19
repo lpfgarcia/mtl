@@ -1,19 +1,11 @@
 ---
 title: "Extraindo as medidas tradicionais para caracterização"
-output: html_notebook
-knit: (function(input_file, encoding) {
-  out_dir <- 'docs';
-  rmarkdown::render(input_file,
- encoding=encoding,
- output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
+output:
+  html_document:
+    df_print: paged
+knit: (function(input_file, encoding) { out_dir <- 'docs'; rmarkdown::render(input_file,
+  encoding=encoding, output_file=file.path(dirname(input_file), out_dir, 'tradicionais.html'))})
 ---
-
-Configurando o caminho base:
-
-```{r}
-path = "~/Desktop/mtl/dataset/"
-setwd(path)
-```
 
 Carregando e instalando as bibliotecas necessárias:
   
@@ -38,7 +30,7 @@ Selecionando uma base de dados do OpenML:
 
 ```{r}
 set.seed(1)
-file = sample(list.files(path, full.names=TRUE), 1)
+file = sample(list.files(pattern=".arff", full.names=TRUE), 1)
 print(file)
 ```
 Extraindo as medidas de caracterização tradicionais para a base:
@@ -52,7 +44,7 @@ Extraindo as medidas de caracterização tradicionais para varias bases de dados
 
 ```{r}
 set.seed(1)
-files = sample(list.files(path, full.names=TRUE), 10)
+files = sample(list.files(pattern=".arff", full.names=TRUE), 10)
 
 aux = lapply(files, function(file) {
   print(file)

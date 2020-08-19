@@ -1,19 +1,11 @@
 ---
 title: "Definindo os classificadores"
-output: html_notebook
-knit: (function(input_file, encoding) {
-  out_dir <- 'docs';
-  rmarkdown::render(input_file,
- encoding=encoding,
- output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
+output:
+  html_document:
+    df_print: paged
+knit: (function(input_file, encoding) { out_dir <- 'docs'; rmarkdown::render(input_file,
+  encoding=encoding, output_file=file.path(dirname(input_file), out_dir, 'classificadores.html'))})
 ---
-
-Configurando o caminho base:
-
-```{r}
-path = "~/Desktop/mtl/dataset"
-setwd(path)
-```
 
 Carregando e instalando as bibliotecas necessárias:
 
@@ -109,7 +101,8 @@ acuracia <- function(test, pred) {
 Selecionando uma base de dados do OpenML:
 
 ```{r}
-file = sample(list.files("dataset/", full.name=TRUE), 1)
+set.seed(1)
+file = sample(list.files(pattern=".arff", full.name=TRUE), 1)
 print(file)
 ```
 
