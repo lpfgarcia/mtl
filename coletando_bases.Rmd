@@ -1,19 +1,11 @@
 ---
 title: "Download das bases do OpenML"
-output: html_notebook
-knit: (function(input_file, encoding) {
-  out_dir <- 'docs';
-  rmarkdown::render(input_file,
- encoding=encoding,
- output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
+output:
+  html_document:
+    df_print: paged
+knit: (function(input_file, encoding) { out_dir <- 'docs'; rmarkdown::render(input_file,
+  encoding=encoding, output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
 ---
-
-Configurando o caminho base:
-
-```{r}
-# path = "~/Desktop/mtl/dataset/"
-setwd(path)
-```
 
 Carregando e instalando as bibliotecas necessárias:
 
@@ -47,15 +39,15 @@ Precisamos selcionar algumas bases de dados para nosso experimento de Meta-learn
 
 ```{r}
 ids = which(
-  df$status == "active" &
-  df$number.of.instances >= 100 &
-  df$number.of.instances <= 1000 &
-  df$number.of.features >= 2 &
-  df$number.of.features <= 10 &
-  df$number.of.missing.values == 0 &
-  df$number.of.classes >= 2 &
-  df$number.of.classes <= 10 &
-  df$number.of.missing.values == 0
+  bases$status == "active" &
+  bases$number.of.instances >= 100 &
+  bases$number.of.instances <= 1000 &
+  bases$number.of.features >= 2 &
+  bases$number.of.features <= 10 &
+  bases$number.of.missing.values == 0 &
+  bases$number.of.classes >= 2 &
+  bases$number.of.classes <= 10 &
+  bases$number.of.missing.values == 0
 )
 ```
 
@@ -70,7 +62,6 @@ Agora precisamos baixar cada uma das bases e pre-processar.
 
 ```{r}
 for(i in 1:nrow(bases)) {
-  
   id = bases$data.id[i]
   
   # baixando as bases
@@ -99,17 +90,25 @@ for(i in 1:nrow(bases)) {
   # colocando a classe na última coluna
   aux = aux %>% select(-class,class)
   
-  # salvando no arquivo
-  write.arff(x=aux, file=paste0(path, id, "_", name, ".arff"))
+  if(min(summary(aux$class)) > 10) {
+    # salvando no arquivo
+    write.arff(x=aux, file=paste0(id, "_", name, ".arff"))
+  }
 }
 ```
 
 **Verificações adicionais interessantes e importantes:** (1) se o número de linhas eh diferente de zero; (2) se o número de colunas eh diferente de zero; (3) número de amostras por classe maior que x; e (4) se algum atributo é indetificar único. **O OpenML ainda tem alguns bugs**
 
-Verificando as bases de dados baixadas (removemos as bases 374_SyskillWebert-BioMedical e 41496_DRSongsLyrics):
+Removemos a base 41496_DRSongsLyrics:
 
 ```{r}
-files = list.files(path, full.names=TRUE)
+system(paste("rm 41496_DRSongsLyrics.arff"))
+```
+
+Verificando as bases de dados baixadas: 
+
+```{r}
+files = list.files(pattern=".arff", full.names=TRUE)
 aux = lapply(files, function(file) {
   print(file)
   data = foreign::read.arff(file)
