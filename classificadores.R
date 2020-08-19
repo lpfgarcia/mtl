@@ -1,7 +1,3 @@
-# codigo R
-# ERAMIA-SP 2020 - Introducao a meta-aprendizado
-# Ana C. Lorena e Luis P. F. Garcia
-
 if(!require("rpart")) {
   install.packages("rpart")
 }
@@ -17,13 +13,6 @@ if(!require("kknn")) {
 if(!require("e1071")) {
   install.packages("e1071")
 }
-
-require("rpart")
-require("RWeka")
-require("kknn")
-require("e1071")
-
-source("kfold.R")
 
 CART <- function(tran, test) {
   model = rpart(class ~., tran, method="class")

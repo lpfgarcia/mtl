@@ -1,0 +1,130 @@
+---
+title: "Definindo os classificadores"
+output: html_notebook
+---
+
+Configurando o caminho base:
+
+```{r}
+path = "~/Desktop/mtl/dataset"
+setwd(path)
+```
+
+Carregando e instalando as bibliotecas necessárias:
+
+```{r}
+if(!require("foreign")) {
+  install.packages("foreign")
+}
+
+if(!require("rpart")) {
+  install.packages("rpart")
+}
+
+if(!require("RWeka")) {
+  install.packages("RWeka")
+}
+
+if(!require("kknn")) {
+  install.packages("kknn")
+}
+
+if(!require("e1071")) {
+  install.packages("e1071")
+}
+
+if(!require("randomForest")) {
+  install.packages("e1071")
+}
+```
+
+Carregando o algoritmo k-fold cross-validation:
+
+```{r}
+source("kfold.R")
+```
+
+Definindo uma função para a Árvore de Decisão (AD) baseado no algorimto J48: 
+
+```{r}
+C4.5 <- function(tran, test) {
+  model = J48(class ~., tran)
+  pred = predict(model, test[,-ncol(test)])
+  return(pred)
+}
+```
+
+Definindo uma função para uma Rende Neural Artificial (ANN) com backpropagation: 
+
+```{r}
+ANN <- function(train, test) {
+    mlp <- make_Weka_classifier("weka/classifiers/functions/MultilayerPerceptron")
+    model <- mlp(class ~ ., train)
+    predict(model, test[,-ncol(test)])
+}
+```
+
+Definindo uma função para o k-vizinhos mais próximos (kNN) com k=3:
+
+```{r}
+kNN <- function(tran, test) {
+  pred = kknn(class ~., tran, test[,-ncol(test)], k=3)$fitted.values
+  names(pred) = rownames(test)
+  return(pred)
+}
+```
+
+Definindo uma função para as Máquinas de Vetores Suporte (SVM) com kernel radial: 
+
+```{r}
+SVM <- function(tran, test) {
+  model = svm(class ~., tran, kernel="radial")
+  pred = predict(model, test[,-ncol(test)])
+  return(pred)
+}
+```
+Definindo uma função para as Árvores Aleatórias (RandomForest): 
+
+```{r}
+RF <- function(train, test) {
+    model <- randomForest::randomForest(class ~ ., train)
+    predict(model, test[,-ncol(test)], type="prob")
+}
+```
+
+Definindo a medida de acurácia:
+
+```{r}
+acuracia <- function(test, pred) {
+  tab = table(test$class, pred)
+  sum(diag(tab))/sum(tab)
+}
+```
+
+Selecionando uma base de dados do OpenML:
+
+```{r}
+file = sample(list.files("dataset/", full.name=TRUE), 1)
+print(file)
+```
+
+Executando alguns classicadores (C4.5, kNN, SVM) para a base selecionada do OpenML:
+
+```{r}
+
+data = foreign::read.arff(file)
+data = kfold(data)
+
+aux = mapply(function(tran, test) {
+  sapply(c("C4.5", "kNN", "SVM"), function(clas) {
+    pred = do.call(clas, list(tran, test))
+    acuracia(test, pred)
+  })
+}, tran=data$tran, test=data$test)
+print(aux)
+```
+Desempenho médio desses classificadores na base:
+
+```{r}
+boxplot(t(aux))
+```
