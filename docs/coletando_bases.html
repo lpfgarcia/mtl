@@ -1684,7 +1684,7 @@ summary {
 ## [14] &quot;number.of.missing.values&quot;               
 ## [15] &quot;number.of.numeric.features&quot;             
 ## [16] &quot;number.of.symbolic.features&quot;</code></pre>
-<p>Precisamos selcionar algumas bases de dados para nosso experimento de Meta-learning. Com essa configuração estamos interessados em limitar o número de amostras, atriburos, valores ausêntes enúmero de classes.</p>
+<p>Precisamos selcionar algumas bases de dados para nosso experimento de Meta-learning. Com essa configuração estamos interessados em limitar o número de amostras, atriburos, valores ausêntes e número de classes.</p>
 <pre class="r"><code>ids = which(
   bases$status == &quot;active&quot; &amp;
   bases$number.of.instances &gt;= 100 &amp;
@@ -1793,9 +1793,9 @@ dim(bases)</code></pre>
 ## Warning in if (!is.na(dataset$desc$ignore.attribute)) {: the condition has
 ## length &gt; 1 and only the first element will be used</code></pre>
 <p><strong>Verificações adicionais interessantes e importantes:</strong> (1) se o número de linhas eh diferente de zero; (2) se o número de colunas eh diferente de zero; (3) número de amostras por classe maior que x; e (4) se algum atributo é indetificar único. <strong>O OpenML ainda tem alguns bugs</strong></p>
-<p>Removemos a base 41496_DRSongsLyrics:</p>
+<p>Removemos a base 41496_DRSongsLyrics or apresentar problemas como os mencionados:</p>
 <pre class="r"><code>system(paste(&quot;rm 41496_DRSongsLyrics.arff&quot;))</code></pre>
-<p>Verificando as bases de dados baixadas:</p>
+<p>Verificando as bases de dados baixadas. Imprimindo características básicas como número de linhas, colunas e classes:</p>
 <pre class="r"><code>files = list.files(pattern=&quot;.arff&quot;, full.names=TRUE)
 aux = lapply(files, function(file) {
   print(file)

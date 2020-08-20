@@ -34,7 +34,7 @@ source("kfold.R")
 source("classificadores.R")
 ```
 
-Extraindo as medidas de caracterização tradicionais e rodando diversos classificadorespara varias bases de dados:
+Extraindo as medidas de caracterização tradicionais e rodando diversos classificadores para várias bases de dados:
 
 ```{r}
 set.seed(1)
@@ -44,7 +44,7 @@ aux = lapply(files, function(file) {
   print(file)
   data = read.arff(file)
   medidas = metafeatures(class ~ ., data, summary="mean")
-  acc = rowMeans(desempenho(data))
+  acc = rowMeans(desempenho(data, cl=c("RF", "SVM")))
   alg = as.numeric(which.max(acc))
   c(medidas, class=alg)
 })

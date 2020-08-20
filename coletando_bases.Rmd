@@ -35,7 +35,7 @@ dim(bases)
 colnames(bases)
 ```
 
-Precisamos selcionar algumas bases de dados para nosso experimento de Meta-learning. Com essa configuração estamos interessados em limitar o número de amostras, atriburos, valores ausêntes enúmero de classes.
+Precisamos selcionar algumas bases de dados para nosso experimento de Meta-learning. Com essa configuração estamos interessados em limitar o número de amostras, atriburos, valores ausêntes e número de classes.
 
 ```{r}
 ids = which(
@@ -99,13 +99,13 @@ for(i in 1:nrow(bases)) {
 
 **Verificações adicionais interessantes e importantes:** (1) se o número de linhas eh diferente de zero; (2) se o número de colunas eh diferente de zero; (3) número de amostras por classe maior que x; e (4) se algum atributo é indetificar único. **O OpenML ainda tem alguns bugs**
 
-Removemos a base 41496_DRSongsLyrics:
+Removemos a base 41496_DRSongsLyrics or apresentar problemas como os mencionados:
 
 ```{r}
 system(paste("rm 41496_DRSongsLyrics.arff"))
 ```
 
-Verificando as bases de dados baixadas: 
+Verificando as bases de dados baixadas. Imprimindo características básicas como número de linhas, colunas e classes: 
 
 ```{r}
 files = list.files(pattern=".arff", full.names=TRUE)

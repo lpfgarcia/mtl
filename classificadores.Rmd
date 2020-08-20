@@ -85,7 +85,7 @@ Definindo uma função para as Árvores Aleatórias (RandomForest):
 ```{r}
 RF <- function(train, test) {
     model <- randomForest::randomForest(class ~ ., train)
-    predict(model, test[,-ncol(test)], type="prob")
+    predict(model, test[,-ncol(test)])
 }
 ```
 
@@ -106,7 +106,7 @@ file = sample(list.files(pattern=".arff", full.name=TRUE), 1)
 print(file)
 ```
 
-Executando alguns classicadores (C4.5, kNN, SVM) para a base selecionada do OpenML:
+Executando alguns classicadores (RF, SVM) para a base selecionada do OpenML:
 
 ```{r}
 
@@ -114,7 +114,7 @@ data = foreign::read.arff(file)
 data = kfold(data)
 
 aux = mapply(function(tran, test) {
-  sapply(c("C4.5", "kNN", "SVM"), function(clas) {
+  sapply(c("RF", "SVM"), function(clas) {
     pred = do.call(clas, list(tran, test))
     acuracia(test, pred)
   })

@@ -19,7 +19,7 @@ if(!require("devtools")) {
 }
 ```
 
-Carregando e instalando o pacote *mfe*:
+Carregando e instalando o pacote *ECoL*:
 
 ```{r}
 devtools::install_github("lpfgarcia/ECoL")
@@ -40,7 +40,7 @@ data = read.arff(file)
 medidas = complexity(class ~ ., data, summary="mean")
 print(medidas)
 ```
-Extraindo as medidas de caracterização tradicionais para varias bases de dados:
+Extraindo as medidas de complexidade para varias bases de dados:
 
 ```{r}
 set.seed(1)

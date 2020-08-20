@@ -38,7 +38,7 @@ SVM <- function(tran, test) {
 
 RF <- function(tran, test) {
   model = randomForest(class ~., tran)
-  pred = predict(model, test[,-ncol(test)])
+  pred = predict(model, test[,-ncol(test)], type="class")
   return(pred)
 }
 
@@ -47,18 +47,18 @@ acuracia <- function(test, pred) {
   sum(diag(tab))/sum(tab)
 }
 
-classificadores <- function(tran, test, cl=c("CART", "kNN")) {
+classificadores <- function(tran, test, cl=c("SVM", "RF")) {
   sapply(cl, function(clas) {
     pred = do.call(clas, list(tran, test))
     acuracia(test, pred)
   })
 }
 
-desempenho <- function(data) {
+desempenho <- function(data, cl=c("SVM", "RF")) {
 
   df = kfold(data, 10)
   acuracia = mapply(function(tran, test) {
-    classificadores(tran, test)
+    classificadores(tran, test, cl=c("SVM", "RF"))
   }, tran=df$tran, test=df$test)
 
   return(acuracia)
