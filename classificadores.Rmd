@@ -33,6 +33,13 @@ if(!require("e1071")) {
 if(!require("randomForest")) {
   install.packages("e1071")
 }
+
+require("foreign")
+require("rpart")
+require("RWeka")
+require("kknn")
+require("e1071")
+require("randomForest")
 ```
 
 Carregando o algoritmo k-fold cross-validation:

@@ -17,6 +17,8 @@ if(!require("foreign")) {
 if(!require("devtools")) {
   install.packages("devtools")
 }
+
+require("foreign")
 ```
 
 Carregando e instalando o pacote *ECoL*:
